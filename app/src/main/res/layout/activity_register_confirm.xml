@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterConfirmActivity">
+
+    <TextView
+        android:id="@+id/titlePage"
+        android:layout_width="145dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="117dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="117dp"
+        android:lineHeight="28dp"
+        android:fontFamily="@font/raleway"
+        android:text="Confirm \nNew account"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="368dp"
+        android:src="@drawable/ic_back"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgUser"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="125dp"
+        android:src="@drawable/user"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlePage" />
+
+    <TextView
+        android:id="@+id/txtWelcome"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="117dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="117dp"
+        android:fontFamily="@font/raleway_thin"
+        android:text="Welcome"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgUser" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="167dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="117dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="117dp"
+        android:fontFamily="@font/raleway_medium"
+        android:text="Ahlijati Nuraminah"
+        android:lineHeight="28dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtWelcome" />
+
+    <Button
+        android:id="@+id/btnConfirmRegister"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="55dp"
+        android:background="@drawable/btn_round"
+        android:fontFamily="@font/raleway_medium"
+        android:text="Create My account"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+</androidx.constraintlayout.widget.ConstraintLayout>
