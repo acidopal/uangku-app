@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AddTransactionActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".RegisterConfirmActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
