@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int EXTRA_USER_ID = 1;
@@ -17,9 +17,9 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
     public static final int EXTRA_CATEGORY = 0;
     public static final String EXTRA_DESCRIPTION = "com.cs.uangku.EXTRA_DESCRIPTION";
 
-    private TextInputEditText amountTextField;
-    private TextInputEditText categoryTextField;
-    private TextInputEditText descriptionTextField;
+    private TextInputLayout amountTextField;
+    private TextInputLayout categoryTextField;
+    private TextInputLayout descriptionTextField;
     private ImageView btnBack;
     private Button btnSave;
 
@@ -57,9 +57,9 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     private void saveTransaction() {
         int userId = 1;
-        int amount = Integer.parseInt(amountTextField.getText().toString());
-        int category = Integer.parseInt(categoryTextField.getText().toString());
-        String description = descriptionTextField.getText().toString();
+        int amount = Integer.parseInt(String.valueOf(amountTextField));
+        int category = Integer.parseInt(String.valueOf(categoryTextField));
+        String description = descriptionTextField.toString();
 
         if (description.isEmpty()){
             Toast.makeText(this, "Please insert Amount & Category", Toast.LENGTH_SHORT).show();
