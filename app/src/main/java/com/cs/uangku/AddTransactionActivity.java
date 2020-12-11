@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String EXTRA_USER_ID = "com.cs.uangku.EXTRA_USER_ID";
-    public static final String EXTRA_AMOUNT = "com.cs.uangku.EXTRA_AMOUNT";
-    public static final String EXTRA_CATEGORY = "com.cs.uangku.EXTRA_CATEGORY";
+    public static final int EXTRA_USER_ID = 1;
+    public static final int EXTRA_AMOUNT = 0;
+    public static final int EXTRA_CATEGORY = 0;
     public static final String EXTRA_DESCRIPTION = "com.cs.uangku.EXTRA_DESCRIPTION";
 
     private TextInputEditText amountTextField;
@@ -67,9 +67,9 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         }
 
         Intent data = new Intent();
-        data.putExtra(EXTRA_USER_ID, userId);
-        data.putExtra(EXTRA_AMOUNT, amount);
-        data.putExtra(EXTRA_CATEGORY, category);
+        data.putExtra(String.valueOf(EXTRA_USER_ID), userId);
+        data.putExtra(String.valueOf(EXTRA_AMOUNT), amount);
+        data.putExtra(String.valueOf(EXTRA_CATEGORY), category);
         data.putExtra(EXTRA_DESCRIPTION, description);
 
         setResult(RESULT_OK, data);

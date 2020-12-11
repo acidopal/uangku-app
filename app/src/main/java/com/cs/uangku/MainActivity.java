@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int ADD_NOTE_REQUEST = 1;
+    public static final int ADD_TRANSACTION_REQUEST = 1;
     private TransactionViewModel transactionViewModel;
 
     @Override
@@ -55,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_NOTE_REQUEST && resultCode == RESULT_OK){
-            int userId = data.getIntExtra(AddTransactionActivity.EXTRA_USER_ID);
-            int amount = data.getIntExtra(AddTransactionActivity.EXTRA_AMOUNT);
-            int category = data.getIntExtra(AddTransactionActivity.EXTRA_CATEGORY);
+        if (requestCode == ADD_TRANSACTION_REQUEST && resultCode == RESULT_OK){
+            int userId = data.getIntExtra(String.valueOf(AddTransactionActivity.EXTRA_USER_ID), 0);
+            int amount = data.getIntExtra(String.valueOf(AddTransactionActivity.EXTRA_AMOUNT), 0);
+            int category = data.getIntExtra(String.valueOf(AddTransactionActivity.EXTRA_CATEGORY), 1);
             String description = data.getStringExtra(AddTransactionActivity.EXTRA_DESCRIPTION);
 
         }
