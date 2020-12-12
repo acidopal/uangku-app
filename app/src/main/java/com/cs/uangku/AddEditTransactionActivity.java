@@ -5,13 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddEditTransactionActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String EXTRA_ID =  "com.cs.uangku.EXTRA_ID";
     public static final int EXTRA_USER_ID = 1;
     public static final int EXTRA_AMOUNT = 0;
     public static final int EXTRA_CATEGORY = 0;
@@ -21,7 +22,7 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
     private TextInputLayout categoryTextField;
     private TextInputLayout descriptionTextField;
     private ImageView btnBack;
-    private Button btnSave;
+    private FloatingActionButton btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +38,29 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Note");
+            amountTextField.getEditText().setText(intent.getIntExtra(EXTRA_AMOUNT, 1));
+            categoryTextField.getEditText().setText(intent.getIntExtra(EXTRA_DESCRIPTION, 1));
+            descriptionTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+        } else {
+            setTitle("Add Note");
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnBack:
-                Intent mainIntent = new Intent(AddTransactionActivity.this, MainActivity.class);
+                Intent mainIntent = new Intent(AddEditTransactionActivity.this, MainActivity.class);
                 startActivity(mainIntent);
                 break;
             case R.id.btnSave:
                 //todo
                 saveTransaction();
-                Intent saveIntent = new Intent(AddTransactionActivity.this, MainActivity.class);
+                Intent saveIntent = new Intent(AddEditTransactionActivity.this, MainActivity.class);
                 startActivity(saveIntent);
                 break;
         }
@@ -57,9 +68,10 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     private void saveTransaction() {
         int userId = 1;
-        int amount = Integer.parseInt(String.valueOf(amountTextField));
-        int category = Integer.parseInt(String.valueOf(categoryTextField));
-        String description = descriptionTextField.toString();
+
+        int amount = Integer.parseInt(amountTextField.getEditText().getText().toString());
+        int category = Integer.parseInt(categoryTextField.getEditText().getText().toString());
+        String description = descriptionTextField.getEditText().getText().toString();
 
         if (description.isEmpty()){
             Toast.makeText(this, "Please insert Amount & Category", Toast.LENGTH_SHORT).show();

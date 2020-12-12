@@ -43,9 +43,9 @@ public abstract class TransactionDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            transactionDAO.create(new Transaction(1, 20000,1, "Beli Makan"));
-            transactionDAO.create(new Transaction(2, 30000,1, "Beli Minum"));
-            transactionDAO.create(new Transaction(2, 20000,1, "Beli Baju"));
+//            transactionDAO.create(new Transaction(1, 20000,1, "Beli Makan"));
+//            transactionDAO.create(new Transaction(2, 30000,1, "Beli Minum"));
+//            transactionDAO.create(new Transaction(2, 20000,1, "Beli Baju"));
             return null;
         }
     }

@@ -13,6 +13,7 @@ import java.util.List;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionHolder > {
     private List<Transaction> transactions = new ArrayList<>();
+    private OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -42,6 +43,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         notifyDataSetChanged();
     }
 
+    public Transaction getTransactionAt(int position) {
+        return transactions.get(position);
+    }
+
     class TransactionHolder extends RecyclerView.ViewHolder {
         private TextView txtUserId;
         private TextView txtAmount;
@@ -54,6 +59,24 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             txtAmount = itemView.findViewById(R.id.txt_amount);
             txtCategory = itemView.findViewById(R.id.txt_category);
             txtDescription = itemView.findViewById(R.id.txt_description);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(transactions.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Transaction transaction);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }
