@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,9 +15,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_ID =  "com.cs.uangku.EXTRA_ID";
-    public static final int EXTRA_USER_ID = 1;
-    public static final int EXTRA_AMOUNT = 0;
-    public static final int EXTRA_CATEGORY = 0;
+    public static final String EXTRA_TITLE = "com.cs.uangku.EXTRA_TITLE";
+    public static final String EXTRA_USER_ID = "com.cs.uangku.EXTRA_USER_ID";
+    public static final String EXTRA_AMOUNT = "com.cs.uangku.EXTRA_AMOUNT";
+    public static final String EXTRA_CATEGORY = "com.cs.uangku.EXTRA_CATEGORY";
     public static final String EXTRA_DESCRIPTION = "com.cs.uangku.EXTRA_DESCRIPTION";
 
     private TextInputLayout amountTextField;
@@ -23,6 +26,7 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
     private TextInputLayout descriptionTextField;
     private ImageView btnBack;
     private FloatingActionButton btnSave;
+    private TextView txtTitlePage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
         amountTextField = findViewById(R.id.amountTextField);
         categoryTextField = findViewById(R.id.categoryTextField);
         descriptionTextField = findViewById(R.id.descriptionTextField);
+        txtTitlePage = findViewById(R.id.titlePage);
 
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(this);
@@ -41,12 +46,15 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_ID)) {
-            setTitle("Edit Note");
-            amountTextField.getEditText().setText(intent.getIntExtra(EXTRA_AMOUNT, 1));
-            categoryTextField.getEditText().setText(intent.getIntExtra(EXTRA_DESCRIPTION, 1));
+            Log.d("EXTRA_AMOUNT", String.valueOf(intent.getIntExtra(EXTRA_AMOUNT, 1)));
+            setTitle("Edit Transaction");
+            txtTitlePage.setText("Edit Transaction");
+            amountTextField.getEditText().setText(String.valueOf(intent.getIntExtra(EXTRA_AMOUNT, 1)));
+            categoryTextField.getEditText().setText(String.valueOf(intent.getIntExtra(EXTRA_CATEGORY, 1)));
             descriptionTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
         } else {
             setTitle("Add Note");
+            txtTitlePage.setText("Add Transaction");
         }
     }
 
@@ -68,7 +76,7 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
 
     private void saveTransaction() {
         int userId = 1;
-
+        String title = txtTitlePage.getText().toString();
         int amount = Integer.parseInt(amountTextField.getEditText().getText().toString());
         int category = Integer.parseInt(categoryTextField.getEditText().getText().toString());
         String description = descriptionTextField.getEditText().getText().toString();
@@ -79,11 +87,15 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
         }
 
         Intent data = new Intent();
-        data.putExtra(String.valueOf(EXTRA_USER_ID), userId);
-        data.putExtra(String.valueOf(EXTRA_AMOUNT), amount);
-        data.putExtra(String.valueOf(EXTRA_CATEGORY), category);
+        data.putExtra(EXTRA_USER_ID, userId);
+        data.putExtra(EXTRA_AMOUNT, amount);
+        data.putExtra(EXTRA_CATEGORY, category);
         data.putExtra(EXTRA_DESCRIPTION, description);
 
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id != -1) {
+            data.putExtra(EXTRA_ID, id);
+        }
         setResult(RESULT_OK, data);
         finish();
     }

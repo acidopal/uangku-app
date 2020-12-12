@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddEditTransactionActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, ADD_TRANSACTION_REQUEST);
             }
         });
 
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Transaction transaction) {
                 Intent intent = new Intent(MainActivity.this, AddEditTransactionActivity.class);
+                Log.d("GET_ID", String.valueOf(transaction.getId()));
+
                 intent.putExtra(AddEditTransactionActivity.EXTRA_ID, transaction.getId());
                 intent.putExtra(AddEditTransactionActivity.EXTRA_USER_ID, transaction.getUserId());
                 intent.putExtra(AddEditTransactionActivity.EXTRA_AMOUNT, transaction.getAmount());
@@ -82,16 +85,34 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_TRANSACTION_REQUEST && resultCode == RESULT_OK){
-            int userId = data.getIntExtra(String.valueOf(AddEditTransactionActivity.EXTRA_USER_ID), 0);
-            int amount = data.getIntExtra(String.valueOf(AddEditTransactionActivity.EXTRA_AMOUNT), 0);
-            int category = data.getIntExtra(String.valueOf(AddEditTransactionActivity.EXTRA_CATEGORY), 1);
+            int userId = data.getIntExtra(AddEditTransactionActivity.EXTRA_USER_ID, 1);
+            int amount = data.getIntExtra(AddEditTransactionActivity.EXTRA_AMOUNT, 0);
+            int category = data.getIntExtra(AddEditTransactionActivity.EXTRA_CATEGORY, 1);
             String description = data.getStringExtra(AddEditTransactionActivity.EXTRA_DESCRIPTION);
 
             Transaction transaction = new Transaction(userId, amount, category, description);
             transactionViewModel.create(transaction);
 
             Toast.makeText(this, "Transaction Success", Toast.LENGTH_SHORT).show();
-        }else{
+        }else if (requestCode == EDIT_TRANSACTION_REQUEST && resultCode == RESULT_OK) {
+            int id = data.getIntExtra(AddEditTransactionActivity.EXTRA_ID, -1);
+
+            if (id == -1) {
+                Toast.makeText(this, "Transaction can't be updated", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int userId = data.getIntExtra(AddEditTransactionActivity.EXTRA_USER_ID, 1);
+            int amount = data.getIntExtra(AddEditTransactionActivity.EXTRA_AMOUNT, 0);
+            int category = data.getIntExtra(AddEditTransactionActivity.EXTRA_CATEGORY, 1);
+            String description = data.getStringExtra(AddEditTransactionActivity.EXTRA_DESCRIPTION);
+
+            Transaction transaction = new Transaction(userId, amount, category, description);
+            transaction.setId(id);
+            transactionViewModel.update(transaction);
+
+            Toast.makeText(this, "Transaction updated", Toast.LENGTH_SHORT).show();
+        } else{
             Toast.makeText(this, "Failed transaction!", Toast.LENGTH_SHORT).show();
         }
     }
