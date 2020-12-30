@@ -1,4 +1,4 @@
-package com.cs.uangku;
+package com.cs.uangku.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,20 +8,36 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cs.uangku.R;
+import com.cs.uangku.Transaction;
+import com.cs.uangku.adapter.TransactionAdapter;
+import com.cs.uangku.models.TransactionViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String UangkuPref = "UangkuPref";
+    public static final String Name = "nameKey";
+    public static final Integer Balance = 10000;
+    public static final Boolean IsLogin = false;
+
+    private TextView txtUser, txtBalance;
+    private int userId;
+
     public static final int ADD_TRANSACTION_REQUEST = 1;
     public static final int EDIT_TRANSACTION_REQUEST = 2;
     private TransactionViewModel transactionViewModel;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +60,25 @@ public class MainActivity extends AppCompatActivity {
         final TransactionAdapter adapter = new TransactionAdapter();
         recyclerView.setAdapter(adapter);
 
+        txtUser = findViewById(R.id.txtUser);
+        txtBalance = findViewById(R.id.txtBalance);
+
+        sharedPreferences = getSharedPreferences(UangkuPref,  Context.MODE_PRIVATE);
+
+        String name = sharedPreferences.getString("name", "Budi");
+        txtUser.setText(name);
+
+        userId = sharedPreferences.getInt("user_id", 1);
+        Log.d("user_id", String.valueOf(userId));
+
+        Integer balance = sharedPreferences.getInt("balance", 0);
+        txtBalance.setText(balance.toString());
+
         transactionViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(TransactionViewModel.class);
         transactionViewModel.getAllTransaction().observe(this, new Observer<List<Transaction>>() {
             @Override
             public void onChanged(List<Transaction> transactions) {
-                adapter.setTransactions(transactions);
+                adapter.submitList(transactions);
             }
         });
 
@@ -87,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_TRANSACTION_REQUEST && resultCode == RESULT_OK){
             int userId = data.getIntExtra(AddEditTransactionActivity.EXTRA_USER_ID, 1);
             int amount = data.getIntExtra(AddEditTransactionActivity.EXTRA_AMOUNT, 0);
-            int category = data.getIntExtra(AddEditTransactionActivity.EXTRA_CATEGORY, 1);
+            String category = data.getStringExtra(AddEditTransactionActivity.EXTRA_CATEGORY);
             String description = data.getStringExtra(AddEditTransactionActivity.EXTRA_DESCRIPTION);
 
             Transaction transaction = new Transaction(userId, amount, category, description);
@@ -104,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
             int userId = data.getIntExtra(AddEditTransactionActivity.EXTRA_USER_ID, 1);
             int amount = data.getIntExtra(AddEditTransactionActivity.EXTRA_AMOUNT, 0);
-            int category = data.getIntExtra(AddEditTransactionActivity.EXTRA_CATEGORY, 1);
+            String category = data.getStringExtra(AddEditTransactionActivity.EXTRA_CATEGORY);
             String description = data.getStringExtra(AddEditTransactionActivity.EXTRA_DESCRIPTION);
 
             Transaction transaction = new Transaction(userId, amount, category, description);

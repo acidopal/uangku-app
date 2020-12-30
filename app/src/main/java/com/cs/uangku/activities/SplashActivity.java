@@ -1,4 +1,4 @@
-package com.cs.uangku;
+package com.cs.uangku.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.cs.uangku.R;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -31,11 +33,11 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    SharedPreferences prefs = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                    boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false); // return "false" if user is not logged in
+                    SharedPreferences prefs = getSharedPreferences("UangkuPref", Context.MODE_PRIVATE);
+                    boolean isLoggedIn = prefs.getBoolean("is_login", false); // return "false" if user is not logged in
 
                     if (isLoggedIn) {
-                        Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

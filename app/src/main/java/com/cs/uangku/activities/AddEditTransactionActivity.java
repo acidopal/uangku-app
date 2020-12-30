@@ -1,8 +1,10 @@
-package com.cs.uangku;
+package com.cs.uangku.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cs.uangku.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class AddEditTransactionActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String UangkuPref = "UangkuPref";
     public static final String EXTRA_ID =  "com.cs.uangku.EXTRA_ID";
     public static final String EXTRA_TITLE = "com.cs.uangku.EXTRA_TITLE";
     public static final String EXTRA_USER_ID = "com.cs.uangku.EXTRA_USER_ID";
@@ -27,6 +31,9 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
     private ImageView btnBack;
     private FloatingActionButton btnSave;
     private TextView txtTitlePage;
+    private int userId;
+    SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,7 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
             setTitle("Edit Transaction");
             txtTitlePage.setText("Edit Transaction");
             amountTextField.getEditText().setText(String.valueOf(intent.getIntExtra(EXTRA_AMOUNT, 1)));
-            categoryTextField.getEditText().setText(String.valueOf(intent.getIntExtra(EXTRA_CATEGORY, 1)));
+            categoryTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
             descriptionTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
         } else {
             setTitle("Add Note");
@@ -75,10 +82,12 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
     }
 
     private void saveTransaction() {
-        int userId = 1;
+        sharedPreferences = getSharedPreferences(UangkuPref,  Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 1);
+        Log.d("user_id", String.valueOf(userId));
         String title = txtTitlePage.getText().toString();
         int amount = Integer.parseInt(amountTextField.getEditText().getText().toString());
-        int category = Integer.parseInt(categoryTextField.getEditText().getText().toString());
+        String category = categoryTextField.getEditText().getText().toString();
         String description = descriptionTextField.getEditText().getText().toString();
 
         if (description.isEmpty()){

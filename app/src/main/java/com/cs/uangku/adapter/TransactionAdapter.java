@@ -1,19 +1,40 @@
-package com.cs.uangku;
+package com.cs.uangku.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cs.uangku.R;
+import com.cs.uangku.Transaction;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionHolder > {
-    private List<Transaction> transactions = new ArrayList<>();
+public class TransactionAdapter extends ListAdapter<Transaction, TransactionAdapter.TransactionHolder> {
     private OnItemClickListener listener;
+
+    public TransactionAdapter() {
+        super(DIFF_CALLBACK);
+    }
+
+    private static final DiffUtil.ItemCallback<Transaction> DIFF_CALLBACK = new DiffUtil.ItemCallback<Transaction>() {
+        @Override
+        public boolean areItemsTheSame(Transaction oldItem, Transaction newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+        @SuppressLint("DiffUtilEquals")
+        @Override
+        public boolean areContentsTheSame(Transaction oldItem, Transaction newItem) {
+            return oldItem.getUserId().equals(newItem.getUserId()) &&
+                    oldItem.getAmount().equals(newItem.getAmount()) &&
+                    oldItem.getCategory().equals(newItem.getCategory()) &&
+                    oldItem.getDescription() == newItem.getDescription();
+        }
+    };
 
     @NonNull
     @Override
@@ -26,25 +47,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionHolder holder, int position) {
-        Transaction currentTransaction = transactions.get(position);
+        Transaction currentTransaction = getItem(position);
         holder.txtUserId.setText(String.valueOf(currentTransaction.getUserId()));
         holder.txtAmount.setText(String.valueOf(currentTransaction.getAmount()));
         holder.txtCategory.setText(String.valueOf(currentTransaction.getCategory()));
         holder.txtDescription.setText(String.valueOf(currentTransaction.getDescription()));
     }
 
-    @Override
-    public int getItemCount() {
-        return transactions.size();
-    }
-
-    public void setTransactions(List<Transaction> transactions){
-        this.transactions = transactions;
-        notifyDataSetChanged();
-    }
-
     public Transaction getTransactionAt(int position) {
-        return transactions.get(position);
+        return getItem(position);
     }
 
     class TransactionHolder extends RecyclerView.ViewHolder {
@@ -65,7 +76,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (listener != null && position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(transactions.get(position));
+                        listener.onItemClick(getItem(position));
                     }
                 }
             });

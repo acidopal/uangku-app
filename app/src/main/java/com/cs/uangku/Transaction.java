@@ -9,10 +9,10 @@ public class Transaction {
     private Integer id;
     private Integer userId;
     private Integer amount;
-    private Integer category;
+    private String category;
     private String description;
 
-    public Transaction(Integer userId, Integer amount, Integer category, String description) {
+    public Transaction(Integer userId, Integer amount, String category, String description) {
         this.userId = userId;
         this.amount = amount;
         this.category = category;
@@ -43,11 +43,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Integer getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Integer category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 

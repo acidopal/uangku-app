@@ -1,14 +1,19 @@
-package com.cs.uangku;
+package com.cs.uangku.models;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.cs.uangku.Transaction;
+import com.cs.uangku.TransactionRepo;
+
 import java.util.List;
 
 public class TransactionViewModel extends AndroidViewModel {
+    public static final String UangkuPref = "UangkuPref";
     private TransactionRepo transactionRepo;
     private LiveData<List<Transaction>> allTransaction;
 

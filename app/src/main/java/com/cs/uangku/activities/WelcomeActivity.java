@@ -1,4 +1,4 @@
-package com.cs.uangku;
+package com.cs.uangku.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -11,6 +11,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.cs.uangku.R;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -24,7 +24,8 @@ public interface TransactionDAO {
     @Query("DELETE FROM transaction_table")
     void deleteAllTransaction();
 
+//        @Query("SELECT * FROM transaction_table WHERE userId = :userId ORDER BY id DESC")
+//    @Query("SELECT * FROM transaction_table  WHERE userId = 4 ORDER BY id DESC")
     @Query("SELECT * FROM transaction_table ORDER BY id DESC")
     LiveData<List<Transaction>> getAllTransaction();
-
 }
