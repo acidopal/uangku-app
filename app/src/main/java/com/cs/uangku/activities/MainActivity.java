@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                 intent.putExtra(AddEditTransactionActivity.EXTRA_ID, transaction.getId());
                 intent.putExtra(AddEditTransactionActivity.EXTRA_USER_ID, transaction.getUserId());
+                intent.putExtra(AddEditTransactionActivity.EXTRA_CATEGORY, transaction.getCategory());
                 intent.putExtra(AddEditTransactionActivity.EXTRA_AMOUNT, transaction.getAmount());
                 intent.putExtra(AddEditTransactionActivity.EXTRA_DESCRIPTION, transaction.getDescription());
                 startActivityForResult(intent, EDIT_TRANSACTION_REQUEST);
@@ -123,12 +124,12 @@ public class MainActivity extends AppCompatActivity {
             Transaction transaction = new Transaction(userId, amount, category, description);
             transactionViewModel.create(transaction);
 
-            Toast.makeText(this, "Transaction Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Transaksi berhasil", Toast.LENGTH_SHORT).show();
         }else if (requestCode == EDIT_TRANSACTION_REQUEST && resultCode == RESULT_OK) {
             int id = data.getIntExtra(AddEditTransactionActivity.EXTRA_ID, -1);
 
             if (id == -1) {
-                Toast.makeText(this, "Transaction can't be updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Transaksi tidak bisa diperbarui!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -141,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
             transaction.setId(id);
             transactionViewModel.update(transaction);
 
-            Toast.makeText(this, "Transaction updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Transaksi diperbarui", Toast.LENGTH_SHORT).show();
         } else{
-            Toast.makeText(this, "Failed transaction!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Transaksi gagal!", Toast.LENGTH_SHORT).show();
         }
     }
 }

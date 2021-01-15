@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                                             String name = jsonRESULTS.getJSONObject("data").getString("name");
                                             String email = jsonRESULTS.getJSONObject("data").getString("email");
                                             Integer balance = jsonRESULTS.getJSONObject("data").getInt("balance");
+                                            String rememberToken = jsonRESULTS.getJSONObject("data").getString("remember_token");
 
                                             SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putInt("user_id", id);
@@ -104,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString("email", email);
                                                 editor.putInt("balance", balance);
                                                 editor.putBoolean("is_login", true);
+                                                editor.putString("rememberToken", rememberToken);
                                             editor.commit();
 
                                             startActivity(new Intent(mContext, MainActivity.class)
@@ -134,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+
 
         Window window = LoginActivity.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

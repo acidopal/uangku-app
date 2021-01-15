@@ -1,6 +1,7 @@
 package com.cs.uangku.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,16 @@ public class TransactionAdapter extends ListAdapter<Transaction, TransactionAdap
     public void onBindViewHolder(@NonNull TransactionHolder holder, int position) {
         Transaction currentTransaction = getItem(position);
         holder.txtUserId.setText(String.valueOf(currentTransaction.getUserId()));
-        holder.txtAmount.setText(String.valueOf(currentTransaction.getAmount()));
-        holder.txtCategory.setText(String.valueOf(currentTransaction.getCategory()));
+
+        if(String.valueOf(currentTransaction.getCategory()).equals("Pemasukan")){
+            holder.txtCategory.setTextColor(Color.parseColor("#3E9D9D"));
+            holder.txtCategory.setText(String.valueOf(currentTransaction.getCategory()));
+            holder.txtAmount.setText(" + " + String.valueOf(currentTransaction.getAmount()));
+        }else{
+            holder.txtCategory.setTextColor(Color.parseColor("#C54245"));
+            holder.txtCategory.setText(String.valueOf(currentTransaction.getCategory()));
+            holder.txtAmount.setText(" - " + String.valueOf(currentTransaction.getAmount()));
+        }
         holder.txtDescription.setText(String.valueOf(currentTransaction.getDescription()));
     }
 

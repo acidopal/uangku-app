@@ -2,6 +2,7 @@ package com.cs.uangku.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,13 +14,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs.uangku.R;
+import com.cs.uangku.api.BaseApiService;
+import com.cs.uangku.api.TokenInterceptor;
+import com.cs.uangku.api.UtilsApi;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class AddEditTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String UangkuPref = "UangkuPref";
     public static final String EXTRA_ID =  "com.cs.uangku.EXTRA_ID";
-    public static final String EXTRA_TITLE = "com.cs.uangku.EXTRA_TITLE";
     public static final String EXTRA_USER_ID = "com.cs.uangku.EXTRA_USER_ID";
     public static final String EXTRA_AMOUNT = "com.cs.uangku.EXTRA_AMOUNT";
     public static final String EXTRA_CATEGORY = "com.cs.uangku.EXTRA_CATEGORY";
@@ -34,6 +49,9 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
     private int userId;
     SharedPreferences sharedPreferences;
 
+    ProgressDialog loading;
+    Context mContext;
+    BaseApiService mApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +62,9 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
         categoryTextField = findViewById(R.id.categoryTextField);
         descriptionTextField = findViewById(R.id.descriptionTextField);
         txtTitlePage = findViewById(R.id.titlePage);
+
+        mContext = this;
+        mApiService = UtilsApi.getAPIService();
 
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(this);
@@ -57,7 +78,7 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
             setTitle("Edit Transaction");
             txtTitlePage.setText("Edit Transaction");
             amountTextField.getEditText().setText(String.valueOf(intent.getIntExtra(EXTRA_AMOUNT, 1)));
-            categoryTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+            categoryTextField.getEditText().setText(intent.getStringExtra(EXTRA_CATEGORY));
             descriptionTextField.getEditText().setText(intent.getStringExtra(EXTRA_DESCRIPTION));
         } else {
             setTitle("Add Note");
@@ -105,6 +126,57 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
         if (id != -1) {
             data.putExtra(EXTRA_ID, id);
         }
+
+        loading = ProgressDialog.show(AddEditTransactionActivity.this, "", "Sedang di proses...", true);
+
+        //get token user
+        SharedPreferences prefs = getSharedPreferences("UangkuPref", Context.MODE_PRIVATE);
+        String rememberToken = prefs.getString("rememberToken", "");
+
+
+        TokenInterceptor interceptor = new TokenInterceptor();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
+                .build();
+
+        mApiService.saveTransaction(amount, category, description)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.d("response", String.valueOf(response));
+                        if (response.isSuccessful()){
+                            loading.dismiss();
+                            try {
+                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
+                                Log.d("jsonResult", String.valueOf(jsonRESULTS));
+                                Log.d("jsonResultData", jsonRESULTS.getJSONObject("data").getString("name"));
+                                Log.d("here", "here");
+                                if (jsonRESULTS.getString("code").equals("200")) {
+                                    Toast.makeText(mContext, "Berhasil", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    String error_message = jsonRESULTS.getString("error_msg");
+                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(mContext, "Gagal Melakukan Transaksi!", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+                });
+
         setResult(RESULT_OK, data);
         finish();
     }

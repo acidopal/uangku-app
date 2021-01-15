@@ -22,4 +22,10 @@ public interface BaseApiService {
     Call<ResponseBody> register(@Field("name") String name,
                                 @Field("email") String email,
                                 @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("transaction")
+    Call<ResponseBody> saveTransaction(@Field("amount") int amount,
+                                @Field("category") String category,
+                                @Field("description") String password);
 }
