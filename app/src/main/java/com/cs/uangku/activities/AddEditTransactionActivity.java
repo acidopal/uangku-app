@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +66,14 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
         categoryTextField = findViewById(R.id.categoryTextField);
         descriptionTextField = findViewById(R.id.descriptionTextField);
         txtTitlePage = findViewById(R.id.titlePage);
+
+
+//        String[] CategoryOption = new String[] {"Pemasukan", "Pengeluaran"};
+//
+//        ArrayAdapter<String> adapter =
+//                new ArrayAdapter<>( this, R.layout.activity_add_transaction, CategoryOption);
+//        AutoCompleteTextView editTextFilledExposedDropdown = findViewById(R.id.filled_exposed_dropdown);
+//        editTextFilledExposedDropdown.setAdapter(adapter);
 
         mContext = this;
         mApiService = UtilsApi.getAPIService();
@@ -127,57 +139,81 @@ public class AddEditTransactionActivity extends AppCompatActivity implements Vie
             data.putExtra(EXTRA_ID, id);
         }
 
-        loading = ProgressDialog.show(AddEditTransactionActivity.this, "", "Sedang di proses...", true);
-
-        //get token user
+        //get now balance
         SharedPreferences prefs = getSharedPreferences("UangkuPref", Context.MODE_PRIVATE);
-        String rememberToken = prefs.getString("rememberToken", "");
+        int currentBalance = prefs.getInt("balance", 0);
 
+        int balance = 0;
+        //last balance
+        if (category.equals("Pemasukan")){
+            balance = currentBalance + amount;
+        }else{
+            balance = currentBalance - amount;
+        }
 
-        TokenInterceptor interceptor = new TokenInterceptor();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+             editor.putInt("balance", balance);
+        editor.commit();
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .build();
-
-        mApiService.saveTransaction(amount, category, description)
-                .enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Log.d("response", String.valueOf(response));
-                        if (response.isSuccessful()){
-                            loading.dismiss();
-                            try {
-                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
-                                Log.d("jsonResult", String.valueOf(jsonRESULTS));
-                                Log.d("jsonResultData", jsonRESULTS.getJSONObject("data").getString("name"));
-                                Log.d("here", "here");
-                                if (jsonRESULTS.getString("code").equals("200")) {
-                                    Toast.makeText(mContext, "Berhasil", Toast.LENGTH_SHORT).show();
-                                }else {
-                                    String error_message = jsonRESULTS.getString("error_msg");
-                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
-                                }
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }catch (IOException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(mContext, "Gagal Melakukan Transaksi!", Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
-                    }
-                });
-
+        // loading = ProgressDialog.show(AddEditTransactionActivity.this, "", "Sedang di proses...", true);
+        // saveToAPI(amount, category, description);
         setResult(RESULT_OK, data);
         finish();
     }
+
+    private void saveToAPI(int amount, String category, String description) {
+            SharedPreferences prefs = getSharedPreferences("UangkuPref", Context.MODE_PRIVATE);
+            String rememberToken = prefs.getString("rememberToken", "");
+            TokenInterceptor interceptor = new TokenInterceptor();
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(client)
+                    .build();
+
+            mApiService.saveTransaction(amount, category, description)
+            .enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Log.d("response", String.valueOf(response));
+                    if (response.isSuccessful()){
+                        loading.dismiss();
+                        try {
+                            JSONObject jsonRESULTS = new JSONObject(response.body().string());
+
+                            if (jsonRESULTS.getString("code").equals("200")) {
+                                Toast.makeText(mContext, "Berhasil", Toast.LENGTH_SHORT).show();
+                            }else {
+                                String error_message = jsonRESULTS.getString("error_msg");
+                                Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                            }
+
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(mContext, "Gagal Melakukan Transaksi!", Toast.LENGTH_SHORT).show();
+                    loading.dismiss();
+                }
+            });
+
+    }
+
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+//    {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.category_item, menu);
+//        menu.setHeaderTitle("Select The Action");
+//    }
 }

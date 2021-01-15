@@ -61,7 +61,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         txtUser = findViewById(R.id.txtUser);
+
+        SharedPreferences prefs = getSharedPreferences("UangkuPref", Context.MODE_PRIVATE);
+        int currentBalance = prefs.getInt("balance", 0);
+
         txtBalance = findViewById(R.id.txtBalance);
+        txtBalance.setText(String.valueOf(currentBalance));
 
         sharedPreferences = getSharedPreferences(UangkuPref,  Context.MODE_PRIVATE);
 
@@ -69,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         txtUser.setText(name);
 
         userId = sharedPreferences.getInt("user_id", 1);
-        Log.d("user_id", String.valueOf(userId));
 
         Integer balance = sharedPreferences.getInt("balance", 0);
         txtBalance.setText(balance.toString());
